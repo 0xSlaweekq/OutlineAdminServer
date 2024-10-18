@@ -26,7 +26,7 @@ docker compose -f ./docker-compose.* -p slaweekq up -d
 
 echo "Server started"
 
-# docker logs slaweekq-outline_admin-1
-# docker logs slaweekq-reverse-proxy-1
-# docker logs slaweekq-webserver-1
-# docker exec -it slaweekq-reverse-proxy-1 ping webserver
+# docker logs outline_admin
+# docker logs reverse-proxy
+# docker logs web
+# docker exec -it reverse-proxy ping web
