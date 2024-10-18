@@ -12,11 +12,6 @@
 # sudo sed -i "s/Host([^)]*)/Host(\`${domain[@]}\`)/g" docker-compose.yml
 # sudo sed -i "s/NGINX_HOST=[^)]*/NGINX_HOST=${domain[@]}/g" docker-compose.yml
 
-IP=$(curl api.ipify.org)
-echo "################################################################"
-echo Done! Create an A-type entry in your domain control panel, targeting $IP
-echo "################################################################"
-
 # start bash -i ./start.sh
 # alias defpass="echo 'YOUR_DOCKER_PASS"
 # alias doccon="docker login -u YOUR_DOCKER_USER_NAME --password-stdin"
@@ -28,6 +23,10 @@ docker compose -p slaweekq down -v && docker compose -f ./docker-compose.* rm -s
 docker compose -f ./docker-compose.* -p slaweekq up -d
 
 echo "Server started"
+IP=$(curl api.ipify.org)
+echo "################################################################"
+echo Done! Create an A-type entry in your domain control panel, targeting $IP
+echo "################################################################"
 
 # docker logs outline_admin
 # docker logs reverse-proxy
