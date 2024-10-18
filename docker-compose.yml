@@ -1,33 +1,33 @@
 services:
-#   reverse-proxy:
-#     image: traefik:latest
-#     hostname: reverse-proxy
-#     container_name: reverse-proxy
-#     restart: always
-#     labels:
-#       - traefik.enable=true
-#       - traefik.docker.network=traefik-public
-#       - "traefik.http.middlewares.to-ssl-redirectscheme.redirectscheme.scheme=https"
-#       - "traefik.http.middlewares.to-ssl-redirectscheme.redirectscheme.permanent=true"
-#     command:
-#       - --providers.docker
-#       - --providers.docker.exposedbydefault=false
-#       - --entrypoints.web.address=:80
-#       - --entrypoints.secureweb.address=:443
-#       - --certificatesresolvers.le.acme.email=volatileasm@protonmail.com
-#       - --certificatesresolvers.le.acme.storage=/certificates/acme.json
-#       - --certificatesresolvers.le.acme.tlschallenge=true
-#       - --accesslog
-#       - --entryPoints.web.forwardedHeaders.insecure
-#       - --log
-#     ports:
-#       - 80:80
-#       - 443:443
-#     networks:
-#       - traefik-public
-#     volumes:
-#       - /var/run/docker.sock:/var/run/docker.sock:ro
-#       - traefik-public-certificates:/certificates
+  reverse-proxy:
+    image: traefik:latest
+    hostname: reverse-proxy
+    container_name: reverse-proxy
+    restart: always
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=traefik-public
+      - "traefik.http.middlewares.to-ssl-redirectscheme.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.to-ssl-redirectscheme.redirectscheme.permanent=true"
+    command:
+      - --providers.docker
+      - --providers.docker.exposedbydefault=false
+      - --entrypoints.web.address=:80
+      - --entrypoints.secureweb.address=:443
+      - --certificatesresolvers.le.acme.email=volatileasm@protonmail.com
+      - --certificatesresolvers.le.acme.storage=/certificates/acme.json
+      - --certificatesresolvers.le.acme.tlschallenge=true
+      - --accesslog
+      - --entryPoints.web.forwardedHeaders.insecure
+      - --log
+    ports:
+      - 80:80
+      - 443:443
+    networks:
+      - traefik-public
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - traefik-public-certificates:/certificates
 
   web:
     image: nginx:latest
