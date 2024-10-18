@@ -1,0 +1,84 @@
+services:
+  reverse-proxy:
+    image: traefik:latest
+    restart: always
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=traefik-public
+      - "traefik.http.middlewares.to-ssl-redirectscheme.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.to-ssl-redirectscheme.redirectscheme.permanent=true"
+    command:
+      - --providers.docker
+      - --providers.docker.exposedbydefault=false
+      - --entrypoints.web.address=:80
+      - --entrypoints.secureweb.address=:443
+      - --certificatesresolvers.myresolver.acme.email=volatileasm@protonmail.com
+      - --certificatesresolvers.myresolver.acme.storage=/certificates/acme.json
+      - --certificatesresolvers.myresolver.acme.tlschallenge=true
+      - --accesslog
+      - --entryPoints.web.forwardedHeaders.insecure
+      - --log
+    ports:
+      - 80:80
+      - 443:443
+    networks:
+      - traefik-public
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - traefik-public-certificates:/certificates
+
+  web:
+    image: nginx:latest
+    volumes:
+      - ./public:/var/www/html
+      - ./nginx/templates:/etc/nginx/templates
+    networks:
+      - traefik-public
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.draitrin-http.entrypoints=web
+      - traefik.http.routers.draitrin-http.rule=Host(`test.com`)
+      - traefik.http.routers.draitrin-http.middlewares=to-ssl-redirectscheme@docker
+      - traefik.docker.network=traefik-public
+      - traefik.http.routers.draitrin-https.entrypoints=secureweb
+      - traefik.http.routers.draitrin-https.rule=Host(`test.com`)
+      - traefik.http.routers.draitrin-https.tls=true
+      - traefik.http.routers.draitrin-https.tls.certresolver=myresolver
+      - traefik.http.services.draitrin.loadbalancer.server.port=80
+    environment:
+      - NGINX_PORT=80
+      - NGINX_HOST=test.com
+    links:
+      - php-fpm
+      - outline_admin
+
+  php-fpm:
+    image: php:8-fpm
+    volumes:
+      - ./public:/var/www/html
+    networks:
+      - traefik-public
+
+  outline_admin:
+    image: slaweekq/outline_admin
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "${APP_PORT:-9696}:80"
+      - "${VITE_PORT:-5173}:${VITE_PORT:-5173}"
+    volumes:
+      - ".:/var/www/html"
+    environment:
+      - PORT=9696
+    networks:
+      - traefik-public
+    restart: unless-stopped
+
+
+volumes:
+  traefik-public-certificates:
+
+
+networks:
+  traefik-public:
+    external: true

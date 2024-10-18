@@ -1,0 +1,17 @@
+services:
+  outline_admin:
+    image: slaweekq/outline_admin
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "${APP_PORT:-9696}:80"
+      - "${VITE_PORT:-5173}:${VITE_PORT:-5173}"
+    volumes:
+      - ".:/var/www/html"
+    networks:
+      - traefik-public
+    restart: unless-stopped
+
+networks:
+  traefik-public:
+    driver: bridge
