@@ -5,11 +5,11 @@ server {
     proxy_connect_timeout 600;
     proxy_send_timeout 600;
 
-    listen [::]:443 ssl; # managed by Certbot
-    listen 443 ssl; # managed by Certbot
-    ##Пути до сертификатов другие могут быть, не помню просто куда по умолчанию Certbot их кладёт
-    ssl_certificate /etc/letsencrypt/live/site2.ru/fullchain.pem; # managed by Certbot
-    ssl_certificate_key /etc/letsencrypt/live/site2.ru/privkey.pem; # managed by Certbot
+    # listen [::]:443 ssl; # managed by Certbot
+    # listen 443 ssl; # managed by Certbot
+    # ##Пути до сертификатов другие могут быть, не помню просто куда по умолчанию Certbot их кладёт
+    # ssl_certificate /etc/letsencrypt/live/site2.ru/fullchain.pem; # managed by Certbot
+    # ssl_certificate_key /etc/letsencrypt/live/site2.ru/privkey.pem; # managed by Certbot
 
     index index.php index.html index.htm index.nginx-debian.html;
     include /etc/nginx/mime.types;
@@ -50,15 +50,16 @@ server {
     sendfile on;
 
     location / {
-        proxy_set_header Host $http_host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        # proxy_set_header Host $http_host;
+        # proxy_set_header X-Real-IP $remote_addr;
+        # proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         # proxy_pass http://127.0.0.1:8080/;
         try_files $uri $uri.html $uri/  =404;
     }
 
     location ~ ^/(api|cnt|recv|cfg|static_tokens|geo|query|send_log){
         proxy_pass http://${NGINX_HOST}:8080;
+        # proxy_pass http://outline_admin:9696;
     }
 
     location ~ \.php$ {
@@ -75,16 +76,15 @@ server {
         root /var/www/html/images;
         try_files /$arg_url /$arg_url.webp =404 ;
     }
-
 }
 
-server {
-    if ($host = ${NGINX_HOST} localhost) {
-        return 301 https://$host$request_uri;
-    }
+# server {
+#     if ($host = ${NGINX_HOST} localhost) {
+#         return 301 https://$host$request_uri;
+#     }
 
-    server_name ${NGINX_HOST} localhost;
-    listen [::]:80;
-    listen 80;
-    return 404;
-}
+#     server_name ${NGINX_HOST} localhost;
+#     listen [::]:80;
+#     listen 80;
+#     return 404;
+# }
