@@ -32,4 +32,4 @@ echo "################################################################"
 # docker logs reverse-proxy
 # docker logs web
 # docker exec -it reverse-proxy ping web
-# git stash && git fetch && git pull && chmod +x *.sh && ./start
+# git stash && git fetch && git pull && chmod +x *.sh && ./start.sh
