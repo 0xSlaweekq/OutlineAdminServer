@@ -1,19 +1,39 @@
 #!/bin/bash
 
-echo Enter the desired domain in the format of \"test.com\":
-read -a domain
+bash -c \
+'cat << EOF > ~/.ssh/config
+Host github.com
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/id_ed25519
+    IdentitiesOnly yes
+Host digitalocean.com
+    HostName 157.230.76.51
+    IdentityFile ~/.ssh/id_ed25519
+    IdentitiesOnly yes
+PasswordAuthentication no
+EOF'
+
+eval "$(ssh-agent -s)"
+echo $SSH_AGENT_SOCK
+ssh-add ~/.ssh/id_ed25519
+ssh-add -l
+ssh -T git@github.com
+
+# echo Enter the desired domain in the format of \"test.com\":
+# read -a domain
 
 # for elem in ${domains[@]}; do
 #    TRAEFIK_DOMAIN+=" \`$elem\`,"
 #    NGINX_DOMAIN+=" $elem"
 # done
 
-echo $TRAEFIK_DOMAIN
-sudo sed -i "s/Host([^)]*)/Host(\`${domain[@]}\`)/g" docker-compose.yml
-sudo sed -i "s/NGINX_HOST=[^)]*/NGINX_HOST=${domain[@]}/g" docker-compose.yml
+# echo $TRAEFIK_DOMAIN
+# sudo sed -i "s/Host([^)]*)/Host(\`${domain[@]}\`)/g" docker-compose.yml
+# sudo sed -i "s/NGINX_HOST=[^)]*/NGINX_HOST=${domain[@]}/g" docker-compose.yml
 
-IP=$(curl api.ipify.org)
-echo Done! Create an A-type entry in your domain control panel, targeting $IP
+# IP=$(curl api.ipify.org)
+# echo Done! Create an A-type entry in your domain control panel, targeting $IP
 
 # start bash -i ./start.sh
 # alias defpass="echo 'YOUR_DOCKER_PASS"
