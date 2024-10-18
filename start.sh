@@ -13,7 +13,9 @@
 # sudo sed -i "s/NGINX_HOST=[^)]*/NGINX_HOST=${domain[@]}/g" docker-compose.yml
 
 IP=$(curl api.ipify.org)
+echo "################################################################"
 echo Done! Create an A-type entry in your domain control panel, targeting $IP
+echo "################################################################"
 
 # start bash -i ./start.sh
 # alias defpass="echo 'YOUR_DOCKER_PASS"
