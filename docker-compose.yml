@@ -73,6 +73,9 @@ services:
       - traefik-public
 
   outline_admin:
+    # build:
+    #     context: ./docker/8.2
+    #     dockerfile: Dockerfile
     image: slaweekq/outline_admin:latest
     hostname: outline_admin
     container_name: outline_admin
@@ -82,8 +85,8 @@ services:
     ports:
       - "${APP_PORT:-9696}:80"
       - "${VITE_PORT:-5173}:${VITE_PORT:-5173}"
-#    volumes:
-#      - ".:/var/www/html"
+    # volumes:
+    #   - "./public:/var/www/html"
     environment:
       - PORT=9696
     networks:

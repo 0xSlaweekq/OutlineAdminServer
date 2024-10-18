@@ -27,9 +27,3 @@ IP=$(curl api.ipify.org)
 echo "################################################################"
 echo Done! Create an A-type entry in your domain control panel, targeting $IP
 echo "################################################################"
-
-# docker logs outline_admin
-# docker logs reverse-proxy
-# docker logs web
-# docker exec -it reverse-proxy ping web
-# git stash && git fetch && git pull && chmod +x *.sh && ./start.sh
