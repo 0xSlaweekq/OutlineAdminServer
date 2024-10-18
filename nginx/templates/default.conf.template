@@ -58,7 +58,7 @@ server {
     }
 
     location ~ ^/(api|cnt|recv|cfg|static_tokens|geo|query|send_log){
-        proxy_pass http://outline_admin:9696;
+        proxy_pass http://${NGINX_HOST}:8080;
     }
 
     location ~ \.php$ {
