@@ -1,7 +1,5 @@
 #!/bin/bash
 
-wget https://raw.githubusercontent.com/0xSlaweekq/setup/main/vscode/docker-compose.yml
-
 echo Enter the desired domain in the format of \"test.com\":
 read -a domain
 
@@ -27,3 +25,8 @@ docker compose -p slaweekq down -v && docker compose -f ./docker-compose.* rm -s
 docker compose -f ./docker-compose.* -p slaweekq up -d
 
 echo "Server started"
+
+# docker logs slaweekq-outline_admin-1
+# docker logs slaweekq-reverse-proxy-1
+# docker logs slaweekq-webserver-1
+# docker exec -it slaweekq-reverse-proxy-1 ping webserver
