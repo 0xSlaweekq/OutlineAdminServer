@@ -22,7 +22,6 @@ your machine. Follow the instructions below:
 ```SHELL
 bash -i ./start.sh
 ```
-
 ```SHELL
 git clone https://github.com/0xSlaweekq/OutlineAdminServer.git
 cd OutlineAdminServer
