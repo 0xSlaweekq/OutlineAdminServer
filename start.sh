@@ -14,8 +14,8 @@ certbot renew --dry-run
 # done
 
 echo \`${domain[@]}\`
-sudo sed -i "s/Host([^)]*)/Host('localhost', \`${domain[@]}\`)/g" docker-compose.yml
-sudo sed -i "s/NGINX_HOST=[^)]*/NGINX_HOST=localhost ${domain[@]}/g" docker-compose.yml
+sudo sed -i "s/Host([^)]*)/Host(\`${domain[@]}\`)/g" docker-compose.yml
+sudo sed -i "s/NGINX_HOST=[^)]*/NGINX_HOST=${domain[@]}/g" docker-compose.yml
 
 # start bash -i ./start.sh
 # alias defpass="echo 'YOUR_DOCKER_PASS"
