@@ -37,7 +37,6 @@ chmod +x *.sh && ./start.sh && ./agent.sh
 # docker logs reverse-proxy
 # docker logs web
 ```
-http://outline.naumov.company/
 Once the container is up and running, you can access the admin panel by opening the following URL in your browser:
 
 ```

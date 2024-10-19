@@ -33,11 +33,10 @@ services:
     image: nginx:latest
     hostname: web
     container_name: web
-#     build: .
-    volumes:
-      - ./nginx/templates:/etc/nginx/templates
 # тут хз что указывать, но по многим конфигам так делали
 # ./public наполнял статикой ничего не работало
+#      volumes:
+#       - ./nginx/templates:/etc/nginx/templates
 #       - ./public:/var/www/html
 #       - ./public:/usr/share/nginx/html
 #       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
@@ -75,8 +74,6 @@ services:
       - traefik-public
 
   outline_admin:
-    # build:
-    #     dockerfile: Dockerfile
     image: slaweekq/outline_admin:latest
     hostname: outline_admin
     container_name: outline_admin
@@ -86,8 +83,6 @@ services:
     ports:
       - "${APP_PORT:-9696}:80"
       - "${VITE_PORT:-5173}:${VITE_PORT:-5173}"
-    # volumes:
-    #   - ".:/var/www/html"
     environment:
       - PORT=9696
     networks:
