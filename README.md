@@ -27,7 +27,7 @@ bash -i ./start.sh
 git clone https://github.com/0xSlaweekq/OutlineAdminServer.git
 cd OutlineAdminServer
 cp .env.example .env
-chmod +x *.sh && ./start.sh
+chmod +x *.sh && ./start.sh && ./agent.sh
 // or docker-compose up -d
 ```
 
