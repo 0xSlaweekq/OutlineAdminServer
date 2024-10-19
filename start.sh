@@ -8,16 +8,14 @@ read -a domain
 certbot certonly --standalone --agree-tos --register-unsafely-without-email -d ${domain[@]}
 certbot renew --dry-run
 
-TRAEFIK_DOMAIN='localhost', \`${domain[@]}\`,
-NGINX_DOMAIN=localhost ${domain[@]}
 # for elem in ${domain[@]}; do
 #    TRAEFIK_DOMAIN+=" \`$elem\`,"
 #    NGINX_DOMAIN+=" $elem"
 # done
 
-echo $TRAEFIK_DOMAIN
-sudo sed -i "s/Host([^)]*)/Host($TRAEFIK_DOMAIN)/g" docker-compose.yml
-sudo sed -i "s/NGINX_HOST=[^)]*/NGINX_HOST=$NGINX_DOMAIN/g" docker-compose.yml
+echo \`${domain[@]}\`
+sudo sed -i "s/Host([^)]*)/Host('localhost', \`${domain[@]}\`)/g" docker-compose.yml
+sudo sed -i "s/NGINX_HOST=[^)]*/NGINX_HOST=localhost ${domain[@]}/g" docker-compose.yml
 
 # start bash -i ./start.sh
 # alias defpass="echo 'YOUR_DOCKER_PASS"
