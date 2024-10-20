@@ -1,6 +1,34 @@
-name: AdminServer
-
 services:
+  reverse-proxy:
+    image: traefik:latest
+    hostname: reverse-proxy
+    container_name: reverse-proxy
+    restart: always
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=traefik-public
+      - "traefik.http.middlewares.to-ssl-redirectscheme.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.to-ssl-redirectscheme.redirectscheme.permanent=true"
+    command:
+      - --providers.docker
+      - --providers.docker.exposedbydefault=false
+      - --entrypoints.web.address=:80
+      - --entrypoints.secureweb.address=:443
+      - --certificatesresolvers.le.acme.email=volatileasm@protonmail.com
+      - --certificatesresolvers.le.acme.storage=/certificates/acme.json
+      - --certificatesresolvers.le.acme.tlschallenge=true
+      - --accesslog
+      - --entryPoints.web.forwardedHeaders.insecure
+      - --log
+    ports:
+      - 80:80
+      - 443:443
+    networks:
+      - traefik-public
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - traefik-public-certificates:/certificates
+
   web:
     image: nginx:latest
     hostname: web
@@ -20,10 +48,10 @@ services:
       - traefik-public
     labels:
       - traefik.enable=true
-      - traefik.http.routers.web-http.entrypoints=http
+      - traefik.http.routers.web-http.entrypoints=web
       - traefik.http.routers.web-http.rule=Host(#HOSTS)
       - traefik.docker.network=traefik-public
-      - traefik.http.routers.web-https.entrypoints=https
+      - traefik.http.routers.web-https.entrypoints=secureweb
       - traefik.http.routers.web-https.rule=Host($HOSTS)
       - traefik.http.routers.web-https.tls=true
       - traefik.http.routers.web-https.tls.certresolver=le
@@ -58,11 +86,11 @@ services:
       - traefik-public
     labels:
       - traefik.enable=true
-      - traefik.http.routers.outline_admin-http.entrypoints=http
-      - traefik.http.routers.outline_admin-http.rule=Host($OUTLINE_ADMIN)
+      - traefik.http.routers.outline_admin-http.entrypoints=web
+      - traefik.http.routers.outline_admin-http.rule=Host(`localhost`)
       - traefik.docker.network=traefik-public
-      - traefik.http.routers.outline_admin-https.entrypoints=https
-      - traefik.http.routers.outline_admin-https.rule=Host($OUTLINE_ADMIN)
+      - traefik.http.routers.outline_admin-https.entrypoints=secureweb
+      - traefik.http.routers.outline_admin-https.rule=Host(`localhost`)
       - traefik.http.routers.outline_admin-https.tls=true
       - traefik.http.routers.outline_admin-https.tls.certresolver=le
       - traefik.http.middlewares.https-redirect.redirectscheme.scheme=https
@@ -72,8 +100,8 @@ services:
 
   nginx_ui:
     image: schenkd/nginx-ui:latest
-    hostname: nginx_ui
-    container_name: nginx_ui
+    hostname: outline_admin
+    container_name: outline_admin
     restart: always
     ports:
       - "${NGINX_UI_PORT:-8080}:8080"
