@@ -1,9 +1,13 @@
 #!/bin/bash
 
-sudo apt install -y certbot
+sudo apt install -y certbot python3-certbot-nginx
 
 echo Enter the desired domain in the format of \"test.com\":
 read -a domain
+
+sudo iptables -A INPUT -p tcp --dport 80 -j ACCEPT
+sudo iptables -A INPUT -p tcp --dport 443 -j ACCEPT
+sudo iptables-save
 
 certbot certonly --standalone --agree-tos --register-unsafely-without-email -d ${domain[@]}
 certbot renew --dry-run
