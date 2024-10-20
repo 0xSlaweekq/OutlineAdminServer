@@ -1,12 +1,91 @@
+# Первый блок настроек.
+# Переадресация (редирект) с http на https
 server {
-    server_name nginx.naumov.company;
+    listen 80;
+    listen [::]:80;
+    server_name nginx.naumov.company localhost;
+    proxy_read_timeout 600;
+    proxy_connect_timeout 600;
+    proxy_send_timeout 600;
+
+	root /usr/share/nginx/html/nginx.naumov.company;
+    index index.php index.html index.htm index.nginx-debian.html;
+    include /etc/nginx/mime.types;
+
+    client_max_body_size 8G;
+    gzip on;
+    gzip_disable "msie6";
+
+    gzip_vary on;
+    gzip_proxied any;
+    gzip_comp_level 6;
+    gzip_buffers 16 8k;
+    gzip_http_version 1.1;
+    gzip_min_length 256;
+    gzip_types
+        application/atom+xml
+        application/geo+json
+        application/javascript
+        application/x-javascript
+        application/json
+        application/ld+json
+        application/manifest+json
+        application/rdf+xml
+        application/rss+xml
+        application/xhtml+xml
+        application/xml
+        font/eot
+        font/otf
+        font/ttf
+        image/svg+xml
+        text/css
+        text/javascript
+        text/plain
+        text/xml;
+
+    gzip_static on;
+    sendfile on;
 
     location / {
         proxy_pass http://localhost:8080/;
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        try_files $uri $uri.html $uri/  =404;
     }
+
+
+    location ~ ^/(api|cnt|recv|cfg|static_tokens|geo|query|send_log){
+        proxy_pass http://localhost:80; # или путь до твоего backend-а или директории
+    }
+
+    error_page 500 502 503 504 /50x.html;
+    location = /50x.html {
+        root /usr/share/nginx/html/nginx.naumov.company;
+    }
+}
+
+# Второй блок настроек.
+server {
+    listen 443 ssl; # managed by Certbot
+    listen [::]:443 ssl; # managed by Certbot
+    server_name  nginx.naumov.company localhost;
+	root /usr/share/nginx/html/nginx.naumov.company;
+
+    index index.php index.html index.htm index.nginx-debian.html;
+
+	location / {
+		try_files $uri $uri/ /index.php;
+	}
 
     auth_basic "nginxui secured";
     auth_basic_user_file /etc/apache2/.htpasswd;
 
     # [...] ommited ssl configuration
+
+    if ($host = nginx.naumov.company) {
+        return 301 https://$host$request_uri;
+    }
+
+    return 404;
 }

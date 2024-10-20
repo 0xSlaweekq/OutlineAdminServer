@@ -93,8 +93,8 @@ server {
 	# ssl_certificate_key /etc/nginx/sites-available/3xui.naumov.company.pem;
 
     ##Пути до сертификатов другие могут быть, не помню просто куда по умолчанию Certbot их кладёт
-    ssl_certificate /etc/letsencrypt/live/3xui.naumov.company/fullchain.pem; # managed by Certbot
-    ssl_certificate_key /etc/letsencrypt/live/3xui.naumov.company/privkey.pem; # managed by Certbot
+    # ssl_certificate /etc/letsencrypt/live/3xui.naumov.company/fullchain.pem; # managed by Certbot
+    # ssl_certificate_key /etc/letsencrypt/live/3xui.naumov.company/privkey.pem; # managed by Certbot
 
     index index.php index.html index.htm index.nginx-debian.html;
 
