@@ -1,0 +1,8 @@
+server {
+    server_name naumov.company;
+
+    location / {
+        proxy_pass http://localhost:80/;
+    }
+
+}
