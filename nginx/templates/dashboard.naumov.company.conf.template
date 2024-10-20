@@ -3,12 +3,12 @@
 server {
     listen 80;
     listen [::]:80;
-    server_name ${NGINX_HOST} localhost;
+    server_name dashboard.naumov.company localhost;
     proxy_read_timeout 600;
     proxy_connect_timeout 600;
     proxy_send_timeout 600;
 
-	root /usr/share/nginx/html/${NGINX_HOST};
+	root /usr/share/nginx/html/dashboard.naumov.company;
     index index.php index.html index.htm index.nginx-debian.html;
     include /etc/nginx/mime.types;
 
@@ -48,7 +48,7 @@ server {
 
     location / {
         proxy_pass http://localhost:9696; # или путь до твоего backend-а или директории
-        # proxy_pass http://outline_admin:9696;
+        # proxy_pass http://dashboard_admin:9696;
         # proxy_pass http://127.0.0.1:9696/;
         proxy_set_header Host $http_host;
         proxy_set_header X-Real-IP $remote_addr;
@@ -71,13 +71,13 @@ server {
     }
 
     location /_next/image {
-        root /usr/share/nginx/html/${NGINX_HOST}/images;
+        root /usr/share/nginx/html/dashboard.naumov.company/images;
         try_files /$arg_url /$arg_url.webp =404 ;
     }
 
     error_page 500 502 503 504 /50x.html;
     location = /50x.html {
-        root /usr/share/nginx/html/${NGINX_HOST};
+        root /usr/share/nginx/html/dashboard.naumov.company;
     }
 }
 
@@ -85,16 +85,16 @@ server {
 server {
     listen 443 ssl; # managed by Certbot
     listen [::]:443 ssl; # managed by Certbot
-    server_name  ${NGINX_HOST} localhost;
-	root /usr/share/nginx/html/${NGINX_HOST};
+    server_name  dashboard.naumov.company localhost;
+	root /usr/share/nginx/html/dashboard.naumov.company;
 
     # Указываем путь, где будут лежать сертификаты для шифрования
-	# ssl_certificate /etc/nginx/sites-available/${NGINX_HOST}.crt;
-	# ssl_certificate_key /etc/nginx/sites-available/${NGINX_HOST}.pem;
+	# ssl_certificate /etc/nginx/sites-available/dashboard.naumov.company.crt;
+	# ssl_certificate_key /etc/nginx/sites-available/dashboard.naumov.company.pem;
 
     ##Пути до сертификатов другие могут быть, не помню просто куда по умолчанию Certbot их кладёт
-    ssl_certificate /etc/letsencrypt/live/${NGINX_HOST}/fullchain.pem; # managed by Certbot
-    ssl_certificate_key /etc/letsencrypt/live/${NGINX_HOST}/privkey.pem; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/dashboard.naumov.company/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/dashboard.naumov.company/privkey.pem; # managed by Certbot
 
     index index.php index.html index.htm index.nginx-debian.html;
 
@@ -102,7 +102,7 @@ server {
 		try_files $uri $uri/ /index.php;
 	}
 
-    if ($host = ${NGINX_HOST}) {
+    if ($host = dashboard.naumov.company) {
         return 301 https://$host$request_uri;
     }
 
