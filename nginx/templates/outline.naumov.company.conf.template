@@ -1,6 +1,6 @@
 # Первый блок настроек.
 # Переадресация (редирект) с http на https
-server {
+http {
     listen 80;
     listen [::]:80;
     server_name outline.naumov.company localhost;
@@ -82,7 +82,7 @@ server {
 }
 
 # Второй блок настроек.
-server {
+https {
     listen 443 ssl; # managed by Certbot
     listen [::]:443 ssl; # managed by Certbot
     server_name  outline.naumov.company localhost;
