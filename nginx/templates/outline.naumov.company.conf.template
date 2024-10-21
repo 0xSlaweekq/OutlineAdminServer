@@ -44,7 +44,7 @@ http {
 }
 
 # Второй блок настроек.
-https {
+server {
     listen 443 ssl; # managed by Certbot
     listen [::]:443 ssl; # managed by Certbot
     server_name outline.naumov.company localhost;
