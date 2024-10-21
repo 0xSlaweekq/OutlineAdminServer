@@ -64,6 +64,8 @@ services:
     links:
       - php-fpm
       - outline_admin
+      - nginx_ui_admin
+      - 3xui_admin
 
   php-fpm:
     image: php:8-fpm
@@ -100,10 +102,10 @@ services:
       - traefik.http.services.outline_admin.loadbalancer.server.port=80
       - traefik.http.routers.outline_admin-http.middlewares=https-redirect
 
-  nginx_ui:
+  nginx_ui_admin:
     image: schenkd/nginx-ui:latest
-    hostname: nginx_ui
-    container_name: nginx_ui
+    hostname: nginx_ui_admin
+    container_name: nginx_ui_admin
     restart: always
     ports:
       - "${NGINX_UI_PORT:-8080}:8080"
@@ -112,10 +114,10 @@ services:
     volumes:
       - /etc/nginx:/etc/nginx
 
-  3x-ui:
+  3xui_admin:
     image: docker.io/slaweekq/3x-ui:latest
-    container_name: 3x-ui
-    hostname: 3x-ui
+    container_name: 3xui_admin
+    hostname: 3xui_admin
     environment:
       - XRAY_VMESS_AEAD_FORCED=false
     volumes:

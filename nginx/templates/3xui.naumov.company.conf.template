@@ -8,7 +8,6 @@ server {
     proxy_connect_timeout 600;
     proxy_send_timeout 600;
 
-	root /usr/share/nginx/html/3xui.naumov.company;
     index index.php index.html index.htm index.nginx-debian.html;
     include /etc/nginx/mime.types;
 
@@ -47,9 +46,7 @@ server {
     sendfile on;
 
     location / {
-        proxy_pass http://localhost:3333/slaweekq; # или путь до твоего backend-а или директории
-        # proxy_pass http://3xui_admin:3333/slaweekq;
-        # proxy_pass http://127.0.0.1:3333/slaweekq/;
+        proxy_pass http://3xui_admin:3333/slaweekq; # или путь до твоего backend-а или директории
         proxy_set_header Host $http_host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -57,7 +54,7 @@ server {
     }
 
     location ~ ^/(api|cnt|recv|cfg|static_tokens|geo|query|send_log){
-        proxy_pass http://localhost:3333/slaweekq; # или путь до твоего backend-а или директории
+        proxy_pass http://3xui_admin:3333/slaweekq; # или путь до твоего backend-а или директории
     }
 
     location ~ \.php$ {
@@ -69,16 +66,6 @@ server {
         fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
         fastcgi_param PATH_INFO $fastcgi_path_info;
     }
-
-    location /_next/image {
-        root /usr/share/nginx/html/3xui.naumov.company/images;
-        try_files /$arg_url /$arg_url.webp =404 ;
-    }
-
-    error_page 500 502 503 504 /50x.html;
-    location = /50x.html {
-        root /usr/share/nginx/html/3xui.naumov.company;
-    }
 }
 
 # Второй блок настроек.
@@ -86,15 +73,6 @@ server {
     listen 443 ssl; # managed by Certbot
     listen [::]:443 ssl; # managed by Certbot
     server_name  3xui.naumov.company localhost;
-	root /usr/share/nginx/html/3xui.naumov.company;
-
-    # Указываем путь, где будут лежать сертификаты для шифрования
-	# ssl_certificate /etc/nginx/sites-available/3xui.naumov.company.crt;
-	# ssl_certificate_key /etc/nginx/sites-available/3xui.naumov.company.pem;
-
-    ##Пути до сертификатов другие могут быть, не помню просто куда по умолчанию Certbot их кладёт
-    # ssl_certificate /etc/letsencrypt/live/3xui.naumov.company/fullchain.pem; # managed by Certbot
-    # ssl_certificate_key /etc/letsencrypt/live/3xui.naumov.company/privkey.pem; # managed by Certbot
 
     index index.php index.html index.htm index.nginx-debian.html;
 

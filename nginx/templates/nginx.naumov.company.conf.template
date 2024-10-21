@@ -8,7 +8,6 @@ server {
     proxy_connect_timeout 600;
     proxy_send_timeout 600;
 
-	root /usr/share/nginx/html/nginx.naumov.company;
     index index.php index.html index.htm index.nginx-debian.html;
     include /etc/nginx/mime.types;
 
@@ -47,21 +46,25 @@ server {
     sendfile on;
 
     location / {
-        proxy_pass http://localhost:8080/;
+        proxy_pass http://nginx_ui_admin:8080/;
         proxy_set_header Host $http_host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         try_files $uri $uri.html $uri/  =404;
     }
 
-
     location ~ ^/(api|cnt|recv|cfg|static_tokens|geo|query|send_log){
-        proxy_pass http://localhost:80; # или путь до твоего backend-а или директории
+        proxy_pass http://nginx_ui_admin:8080/; # или путь до твоего backend-а или директории
     }
 
-    error_page 500 502 503 504 /50x.html;
-    location = /50x.html {
-        root /usr/share/nginx/html/nginx.naumov.company;
+    location ~ \.php$ {
+        try_files $uri =404;
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        fastcgi_pass php-fpm:9000;
+        fastcgi_index index.php;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param PATH_INFO $fastcgi_path_info;
     }
 }
 
@@ -70,7 +73,6 @@ server {
     listen 443 ssl; # managed by Certbot
     listen [::]:443 ssl; # managed by Certbot
     server_name  nginx.naumov.company localhost;
-	root /usr/share/nginx/html/nginx.naumov.company;
 
     index index.php index.html index.htm index.nginx-debian.html;
 
